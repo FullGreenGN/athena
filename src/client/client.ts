@@ -40,9 +40,7 @@ export default class DiscordClient extends Client {
     }
     
     async start(token: string) {
-        this.login(token).then(() => {
-            this.logger.log("Client logged in");
-        }).catch((error) => {
+        this.login(token).catch((error) => {
             this.logger.error("An error occurred while logging in: " + error);
         });
 
@@ -56,13 +54,4 @@ export default class DiscordClient extends Client {
 
         return this
     }
-
-    loadCommands(path: string) {
-        
-    }
-
-    loadEvents(path: string) {
-        
-    }
-
 }

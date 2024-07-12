@@ -48,7 +48,7 @@ class CommandLoader {
     const rest = new REST({ version: '10' }).setToken(this.client.config.get('token'));
 
     rest
-      .put(Routes.applicationCommands(process.env.CLIENT_ID!), {
+      .put(Routes.applicationCommands(this.client.config.get('clientId')), {
         body: this.slashCommands.map((command) => command.toJSON()),
       })
       .then((data: any) => {

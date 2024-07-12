@@ -15,7 +15,8 @@ export default class ConfigManager {
         fs.writeFileSync('config.json', JSON.stringify({
             "prefix": "%c[Logger]",
             "style": "color: #a02d2a; font-weight: bold",
-            "token": "YOUR_BOT_TOKEN"
+            "token": "YOUR_BOT_TOKEN",
+            "clientId": "YOUR_CLIENT_ID",
         }, null, 4));
 
         this.logger.log("Config file created");
