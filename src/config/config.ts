@@ -17,6 +17,7 @@ export default class ConfigManager {
             "style": "color: #a02d2a; font-weight: bold",
             "token": "YOUR_BOT_TOKEN",
             "clientId": "YOUR_CLIENT_ID",
+            "debug": false
         }, null, 4));
 
         this.logger.log("Config file created");

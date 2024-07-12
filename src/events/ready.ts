@@ -8,6 +8,6 @@ export default class ReadyEvent implements BotEvent {
     enable = true;
 
     execute(client: DiscordClient) {
-        client.logger.log(`[🟢] ${client.user.tag} is now online!`);
+        client.logger.log(`[🤖] Logged in as ${client.user?.tag}(${client.user?.id})`);
     }
 }

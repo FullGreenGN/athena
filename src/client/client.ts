@@ -4,12 +4,14 @@ import { Client, Collection, IntentsBitField, Partials, PresenceUpdateStatus } f
 import { getType } from "@/utils/utils";
 import path from "path";
 import fs from "fs";
+import { Command, SlashCommand } from "@/types";
 
 export default class DiscordClient extends Client {
 
     logger = createLogger("%c[Client]", "color: #a02d2a; font-weight: bold");
-    commands: Collection<string, any>;
-    slashCommands: Collection<string, any>;
+    commands: Collection<string, Command>;
+    slashCommands: Collection<string, SlashCommand>;
+    cooldowns = new Collection<string, number>()
     config: ConfigManager;
 
     constructor() {
@@ -26,11 +28,11 @@ export default class DiscordClient extends Client {
             presence: {
                 activities: [
                     {
-                        name: "with discord.js",
-                        type: getType("COMPETING")
+                        name: "42",
+                        type: getType("WATCHING")
                     }
                 ],
-                status: PresenceUpdateStatus.DoNotDisturb,
+                status: PresenceUpdateStatus.Online,
             }
         });
         
@@ -46,10 +48,10 @@ export default class DiscordClient extends Client {
 
         const handlersDir = path.join(__dirname, "../handlers")
 
-        fs.readdirSync(handlersDir).forEach((file) => {
+        fs.readdirSync(handlersDir).forEach(async (file) => {
             if (!file.endsWith(".ts")) return;
-            const handler = require(path.join(handlersDir, file)).default;
-            new handler(this);
+            const HandlerClass = (await import(`${handlersDir}/${file}`)).default;
+            new HandlerClass(this);
         });
 
         return this

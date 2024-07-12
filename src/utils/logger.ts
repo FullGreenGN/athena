@@ -1,3 +1,4 @@
+import ConfigManager from "@/config/config";
 
 class LoggerUtil {
 
@@ -22,7 +23,9 @@ class LoggerUtil {
     }
 
     debug(p0: string) {
-        console.debug.apply(null, [this.prefix, this.style, ...p0]);
+        if (new ConfigManager().get('debug')) {
+            console.debug.apply(null, [this.prefix, this.style, ...p0]);
+        }
     }
 
     error(p0: string) {

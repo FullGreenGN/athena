@@ -45,3 +45,11 @@ export interface BotEvent {
   enable: boolean;
   execute(...args: any[]): void;
 }
+
+declare module "discord.js" {
+  export interface DiscordClient {
+    slashCommands: Collection<string, SlashCommand>;
+    commands: Collection<string, Command>;
+    cooldowns: Collection<string, number>;
+  }
+}
