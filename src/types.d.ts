@@ -7,6 +7,7 @@ import {
   AutocompleteInteraction,
 } from "discord.js";
 import mongoose from "mongoose";
+import DiscordClient from "./client/client";
 
 export interface SlashCommand {
   enable: boolean;
@@ -20,7 +21,7 @@ export interface SlashCommand {
 export interface Command {
   name: string;
   enable: boolean;
-  execute: (message: Message, args: Array<string>) => void;
+  execute: (message: Message, args: Array<string>, client: DiscordClient) => void;
   permissions: Array<PermissionResolvable>;
   botPermissions: Array<PermissionResolvable>;
   aliases: Array<string>;
@@ -51,5 +52,7 @@ declare module "discord.js" {
     slashCommands: Collection<string, SlashCommand>;
     commands: Collection<string, Command>;
     cooldowns: Collection<string, number>;
+    config: ConfigManager;
+    player: Player;
   }
 }

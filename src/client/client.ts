@@ -5,6 +5,7 @@ import { getType } from "@/utils/utils";
 import path from "path";
 import fs from "fs";
 import { Command, SlashCommand } from "@/types";
+import { Player } from "discord-player";
 
 export default class DiscordClient extends Client {
 
@@ -13,6 +14,7 @@ export default class DiscordClient extends Client {
     slashCommands: Collection<string, SlashCommand>;
     cooldowns = new Collection<string, number>()
     config: ConfigManager;
+    player: Player
 
     constructor() {
         super({
@@ -38,7 +40,10 @@ export default class DiscordClient extends Client {
         
         this.commands = new Collection()
         this.slashCommands = new Collection();
+        this.cooldowns = new Collection();
         this.config = new ConfigManager();
+        this.player = new Player(this);
+        this.player.extractors.loadDefault();
     }
     
     async start(token: string) {
@@ -55,5 +60,9 @@ export default class DiscordClient extends Client {
         });
 
         return this
+    }
+
+    getClient() {
+        return this;
     }
 }

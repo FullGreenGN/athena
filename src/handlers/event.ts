@@ -24,7 +24,7 @@ class EventLoader {
           throw new Error(`Module ${file} does not have a default export.`);
         }
 
-        const event: BotEvent = new EventClass(this.client);
+        const event: BotEvent = new EventClass(...[this.client]);
 
         this.logger.debug(`Imported event: ${event.name}`);
         this.logger.debug(`${event.name} event loaded with ${event.once ? "once" : "on"} listener ${event.enable ? "enabled" : "disabled"}`);

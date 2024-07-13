@@ -39,16 +39,23 @@ export const getThemeColor = (color: string) => {
 };
 
 export const checkPermissions = (member: GuildMember, permissions: PermissionResolvable[]) => {
-  let neededPermissions: PermissionResolvable[] = []
+  if (!Array.isArray(permissions)) {
+    throw new TypeError('permissions must be an array');
+  }
+
+  let neededPermissions: PermissionResolvable[] = [];
   permissions.forEach(permission => {
-      if (!member.permissions.has(permission)) neededPermissions.push(permission)
-  })
-  if (neededPermissions.length === 0) return null
+      if (!member.permissions.has(permission)) neededPermissions.push(permission);
+  });
+
+  if (neededPermissions.length === 0) return null;
+
   return neededPermissions.map(p => {
-      if (typeof p === "string") return `\`${p.split(/(?=[A-Z])/).join(" ")}\``
-      else return Object.keys(PermissionFlagsBits).find(k => Object(PermissionFlagsBits)[k] === p)?.split(/(?=[A-Z])/).join(" ")
-  })
-}
+      if (typeof p === "string") return `\`${p.split(/(?=[A-Z])/).join(" ")}\``;
+      else return Object.keys(PermissionFlagsBits).find(k => Object(PermissionFlagsBits)[k] === p)?.split(/(?=[A-Z])/).join(" ");
+  });
+};
+
 
 export const checkBotPermissions = (message: any , permissions: PermissionResolvable[]) => {
   if(!message.channel?.permissionsFor(message.guild?.members.me).has('SendMessages')) return;

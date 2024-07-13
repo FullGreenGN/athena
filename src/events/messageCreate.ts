@@ -1,80 +1,116 @@
 import DiscordClient from "@/client/client";
 import { BotEvent } from "../types";
 import { ChannelType, Message, EmbedBuilder, Events } from "discord.js";
-import { checkBotPermissions, checkPermissions, getThemeColor, sendTimedMessage } from "@/utils/utils";
+import {
+  checkBotPermissions,
+  checkPermissions,
+  getThemeColor,
+  sendTimedMessage,
+} from "@/utils/utils";
 
 export default class MessageCreateEvent implements BotEvent {
-    name = Events.MessageCreate;
-    once = true;
-    enable = true;
+  name = Events.MessageCreate;
+  once = false;
+  enable = true;
 
-    execute(message: Message, client: DiscordClient) {
-        try {
-            console.log(message)
-            if (!message.guild || !message.member || message.author.bot) return;
+  execute(message: Message, client: DiscordClient) {
+    client = message.client as DiscordClient;
 
-            let prefix = "!";
+    if (!message.member || message.member.user.bot) return;
+    if (!message.guild) return;
+    const prefix = "+";
 
-            // Check bot mention
-            const mention = new RegExp(`^<@!?${client.user?.id}>( |)$`);
-            if (message.content.match(mention)) {
-                const embed = new EmbedBuilder()
-                    .setColor(getThemeColor('mainColor'))
-                    .setDescription(`Hey! My Prefix is: \`${prefix}\``);
-                return message.reply({ embeds: [embed] });
-            }
-
-            if (!message.content.startsWith(prefix)) return;
-            if (message.channel.type !== ChannelType.GuildText) return;
-
-            const args = message.content.slice(prefix.length).trim().split(/ +/);
-            const commandName = args.shift()?.toLowerCase();
-            if (!commandName) return;
-
-            const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-            if (!command) return;
-
-            // Check user cooldown
-            const cooldownKey = `${command.name}-${message.author.id}`;
-            const cooldownTime = client.cooldowns.get(cooldownKey);
-            if (command.cooldown && cooldownTime && cooldownTime > Date.now()) {
-                const timeLeft = Math.ceil((cooldownTime - Date.now()) / 1000);
-                return sendTimedMessage(`You need to wait ${timeLeft} more second(s) before reusing the \`${command.name}\` command.`, message.channel, 5000);
-            }
-
-            // Check user permissions
-            const missingPermissions = checkPermissions(message.member, command.permissions);
-            if (missingPermissions.length > 0) {
-                return sendTimedMessage(`❌ You are missing the following permissions to execute this command: ${missingPermissions.join(", ")}`, message.channel, 5000);
-            }
-
-            // Check bot permissions
-            const missingBotPermissions = checkBotPermissions(message, command.botPermissions);
-            if (missingBotPermissions.length > 0) {
-                return sendTimedMessage(`❌ I am missing the following permissions to execute this command: ${missingBotPermissions.join(", ")}`, message.channel, 5000);
-            }
-
-            // Execute command
-            try {
-                command.execute(message, args);
-            } catch (error) {
-                console.error(`Error executing command ${command.name}:`, error);
-                return message.reply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor(getThemeColor('mainColor'))
-                            .setDescription(`❌ Error executing the command: ${error.message}`)
-                    ]
-                });
-            }
-
-            // Set user cooldown
-            if (command.cooldown) {
-                client.cooldowns.set(cooldownKey, Date.now() + command.cooldown * 1000);
-                setTimeout(() => client.cooldowns.delete(cooldownKey), command.cooldown * 1000);
-            }
-        } catch (error) {
-            console.error('Error handling message:', error);
-        }
+    // check bot mention
+    const mention = new RegExp(`^<@!?${message.guild.members.me?.id}>( |)$`);
+    if (message.content.match(mention)) {
+      const embed = new EmbedBuilder()
+        .setColor(getThemeColor("mainColor"))
+        .setDescription(`Hey My Prefix is: \`${prefix}\``);
+      return message.reply({ embeds: [embed] });
     }
+
+    if (!message.content.startsWith(prefix)) return;
+    if (message.channel.type !== ChannelType.GuildText) return;
+
+    let args = message.content.substring(prefix.length).split(" ");
+    let command = client.commands.get(args[0]);
+
+    if (!command) {
+        command = client.commands.find(
+            (cmd) => cmd.aliases && cmd.aliases.includes(args[0])
+        );
+
+        if (!command) return;
+    }
+
+    let cooldown = client.cooldowns.get(
+        `${command?.name}-${message.member.user.username}` || null
+    );
+    
+    let neededPermissions = checkPermissions(
+      message.member,
+      command.permissions
+    );
+    if (neededPermissions !== null)
+      return sendTimedMessage(
+        `❌ | **Ops! I need these permissions: ${neededPermissions.join(
+          ", "
+        )} To be able to execute the command**`,
+        message.channel,
+        5000
+      );
+
+    let neededBotPermissions = checkBotPermissions(
+      message,
+      command.botPermissions
+    );
+    if (neededBotPermissions !== null) {
+      return message.reply({
+        content: `❌ | **Ops! I need these permissions: ${neededBotPermissions?.join(
+          ", "
+        )} To be able to execute the command**`,
+      });
+    }
+
+    if (command.cooldown && cooldown) {
+      if (Date.now() < cooldown) {
+        sendTimedMessage(
+          `You have to wait ${Math.floor(
+            Math.abs(Date.now() - cooldown) / 1000
+          )} second(s) to use this command again.`,
+          message.channel,
+          5000
+        );
+        return;
+      }
+      client.cooldowns.set(
+        `${command.name}-${message.member.user.username}`,
+        Date.now() + command.cooldown * 1000
+      );
+      setTimeout(() => {
+        client.cooldowns.delete(
+          `${command?.name}-${message.member?.user.username}`
+        );
+      }, command.cooldown * 1000);
+    } else if (command.cooldown && !cooldown) {
+      client.cooldowns.set(
+        `${command.name}-${message.member.user.username}`,
+        Date.now() + command.cooldown * 1000
+      );
+    }
+
+    try {
+      command.execute(message, args, client);
+    } catch (e) {
+      console.log(e);
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(getThemeColor("mainColor"))
+            .setTimestamp()
+            .setDescription(`❌ | **Error Al Ejecutar El Comando`),
+        ],
+      });
+    }
+  }
 }

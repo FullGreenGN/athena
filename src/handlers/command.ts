@@ -25,7 +25,7 @@ class CommandLoader {
     this.registerCommands();
   }
 
-  private loadSlashCommands(): void {
+  private async loadSlashCommands(): Promise<void> {
     try {
       const files = readdirSync(this.slashCommandsDir);
       for (const file of files) {
@@ -38,6 +38,7 @@ class CommandLoader {
         if (!command.enable) continue;
         this.slashCommands.push(command.command);
         this.client.slashCommands.set(command.command.name, command);
+        console.log(this.client.slashCommands);
       }
     } catch (error) {
       console.error('Error loading slash commands:', error);
@@ -46,10 +47,10 @@ class CommandLoader {
 
   private async loadCommands(): Promise<void> {
     try {
-      const files = await readdir(this.commandsDir);
+      const files = readdirSync(this.commandsDir);
       for (const file of files) {
         if (!file.endsWith('.ts')) continue;
-        const CommandClass = (await import(`${this.commandsDir}/${file}`)).default;
+        const CommandClass = require(`${this.commandsDir}/${file}`).default;
         if (!CommandClass) {
           throw new Error(`Module ${file} does not have a default export.`);
         }
