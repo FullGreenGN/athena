@@ -21,10 +21,10 @@ export default class DiscordClient extends Client {
                 IntentsBitField.Flags.MessageContent,
                 IntentsBitField.Flags.GuildMessages,
                 IntentsBitField.Flags.GuildMembers,
-                IntentsBitField.Flags.GuildVoiceStates
+                IntentsBitField.Flags.GuildVoiceStates,
             ],
             partials: [Partials.User, Partials.Message, Partials.Reaction],
-            allowedMentions: { repliedUser: false},
+            
             presence: {
                 activities: [
                     {

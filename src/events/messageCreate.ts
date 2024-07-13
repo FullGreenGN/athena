@@ -8,7 +8,7 @@ export default class MessageCreateEvent implements BotEvent {
     once = true;
     enable = true;
 
-    execute(client: DiscordClient, message: Message) {
+    execute(message: Message, client: DiscordClient) {
         try {
             console.log(message)
             if (!message.guild || !message.member || message.author.bot) return;
