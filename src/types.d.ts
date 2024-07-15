@@ -5,6 +5,7 @@ import {
   PermissionResolvable,
   Message,
   AutocompleteInteraction,
+  Events,
 } from "discord.js";
 import mongoose from "mongoose";
 import DiscordClient from "./client/client";
@@ -41,8 +42,9 @@ export interface IGuild extends mongoose.Document {
 export type GuildOption = keyof GuildOptions;
 
 export interface BotEvent {
-  name: string;
+  name: Events | GuildQueueEvent;
   once: boolean;
+  type?: string;
   enable: boolean;
   execute(...args: any[]): void;
 }

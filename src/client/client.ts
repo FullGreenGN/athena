@@ -9,7 +9,7 @@ import { Player } from "discord-player";
 
 export default class DiscordClient extends Client {
 
-    logger = createLogger("%c[Client]", "color: #a02d2a; font-weight: bold");
+    logger = createLogger("%c[Client]", "color: #a02d2a;");
     commands: Collection<string, Command>;
     slashCommands: Collection<string, SlashCommand>;
     cooldowns = new Collection<string, number>()
@@ -46,8 +46,8 @@ export default class DiscordClient extends Client {
         this.player.extractors.loadDefault();
     }
     
-    async start(token: string) {
-        this.login(token).catch((error) => {
+    async start() {
+        this.login(this.config.getConfig().token.toString()).catch((error) => {
             this.logger.error("An error occurred while logging in: " + error);
         });
 

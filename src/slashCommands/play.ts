@@ -22,6 +22,7 @@ export default class PingCommand implements SlashCommand {
 
     async execute(interaction: CommandInteraction): Promise<void> {
       const player = useMainPlayer(); // Get the player instance that we created earlier
+      const voiceConnection = getVoiceConnection(interaction.guildId); 
       const guild = interaction.client.guilds.cache.get(interaction.guild.id)
       const member = guild.members.cache.get(interaction.member.user.id);
       const voiceChannel = member.voice.channel;

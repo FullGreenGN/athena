@@ -13,7 +13,7 @@ class CommandLoader {
   private commands: Command[] = [];
   private slashCommandsDir: string;
   private commandsDir: string;
-  private logger = createLogger('%c[CommandLoader]', 'color: #a02d2a; font-weight: bold');
+  private logger = createLogger('%c[CommandLoader]', 'color: #a02d2a;');
 
   constructor(client: DiscordClient) {
     this.client = client;
@@ -38,7 +38,6 @@ class CommandLoader {
         if (!command.enable) continue;
         this.slashCommands.push(command.command);
         this.client.slashCommands.set(command.command.name, command);
-        console.log(this.client.slashCommands);
       }
     } catch (error) {
       console.error('Error loading slash commands:', error);

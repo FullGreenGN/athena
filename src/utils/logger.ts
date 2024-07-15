@@ -3,7 +3,7 @@ import ConfigManager from "@/config/config";
 class LoggerUtil {
 
     prefix = '%c[Logger]';
-    style = 'color: #a02d2a; font-weight: bold';
+    style = ('style');
 
     constructor(prefix: string, style: string) {
         this.prefix = prefix;
@@ -11,25 +11,25 @@ class LoggerUtil {
     }
 
     log(p0: string) {
-        console.log.apply(null, [this.prefix, this.style, ...p0]);
+        console.log(this.prefix, this.style, p0);
     }
 
     info(p0: string) {
-        console.info.apply(null, [this.prefix, this.style, ...p0]);
+        console.info(this.prefix, this.style, p0);
     }
     
     warn(p0: string) {
-        console.warn.apply(null, [this.prefix, this.style, ...p0]);
+        console.warn(this.prefix, this.style, p0);
     }
 
     debug(p0: string) {
         if (new ConfigManager().get('debug')) {
-            console.debug.apply(null, [this.prefix, this.style, ...p0]);
+            console.debug(this.prefix, this.style, p0);
         }
     }
 
     error(p0: string) {
-        console.error.apply(null, [this.prefix, this.style, ...p0]);
+        console.error(this.prefix, this.style, p0);
     }
 }
 
