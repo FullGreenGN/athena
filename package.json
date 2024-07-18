@@ -10,7 +10,7 @@
     "dev": "nodemon"
   },
   "dependencies": {
-    "42-connector": "https://github.com/codam-coding-college/42-connector.git",
+    "42-connector": "https://github.com/FullGreenGN/42-connector",
     "@codam/fast42": "^2.1.6",
     "@discord-player/extractor": "^4.4.7",
     "@discordjs/voice": "^0.17.0",

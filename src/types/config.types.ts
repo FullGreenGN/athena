@@ -4,11 +4,13 @@ export interface APIConfig {
     callbackUrl: string;
     uid: string;
     secret: string;
+    coalitions: Coalition[];
 }
 
 export interface Coalition {
     id: number;
     name: string;
+    color: string;
 }
 
 export interface DB {
@@ -20,6 +22,10 @@ export interface DB {
     database: string;
 }
 
+export interface Discord {
+    guillMemberRoleId: string;
+}
+
 export interface Config {
     prefix: string;
     style: string;
@@ -28,5 +34,5 @@ export interface Config {
     debug: boolean;
     db: DB;
     api: APIConfig;
-    coalitions: Coalition[];
+    discord: Discord
 }

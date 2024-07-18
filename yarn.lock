@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"42-connector@https://github.com/codam-coding-college/42-connector.git":
+"42-connector@https://github.com/FullGreenGN/42-connector":
   version "3.1.0"
-  resolved "https://github.com/codam-coding-college/42-connector.git#048906628e3727bb2f70f30fab486019aee3aa09"
+  resolved "https://github.com/FullGreenGN/42-connector#f02b40ac8c17908b9dc7a0ffa44730fd93fa74b4"
   dependencies:
     node-fetch "^2.1.0"
     typescript "^4.2.4"

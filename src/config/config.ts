@@ -27,18 +27,20 @@ export default class ConfigManager {
             password: "password",
             port: 3306,
         },
+        discord: {
+            guillMemberRoleId: "MEMBER_ROLE_ID",
+        },
         api: {
             url: "http://api.intra.42.fr",
             uid: "YOUR_API_UID",
             secret: "YOUR_API_SECRET",
-            callbackUrl: "http://localhost:3000/callback"
-        },
-        coalitions: [
-            { id: 1, name: "Coalition 1" },
-            { id: 1, name: "Coalition 1" },
-            { id: 1, name: "Coalition 1" },
-            { id: 1, name: "Coalition 1" }
-        ]
+            callbackUrl: "http://localhost:3000/callback",
+            coalitions: [
+                { id: 1, name: "Coalition 1", color: "#ff0000" },
+                { id: 2, name: "Coalition 2", color: "#00ff00" },
+                { id: 3, name: "Coalition 3", color: "#0000ff" },
+            ]
+        }
     };
 
     createConfig() {
@@ -78,12 +80,6 @@ export default class ConfigManager {
             updateApiConfig('url', this.defaultConfig.api.url);
             updateApiConfig('uid', this.defaultConfig.api.uid);
             updateApiConfig('secret', this.defaultConfig.api.secret);
-        }
-
-        // Check for missing fields in the 'coalitions' array
-        if (!config.coalitions || config.coalitions.length === 0) {
-            config.coalitions = this.defaultConfig.coalitions;
-            updated = true;
         }
 
         // If the config was updated, write the changes back to the file

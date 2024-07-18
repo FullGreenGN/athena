@@ -19,9 +19,9 @@ export class Api {
         this.api = new API(this.config.getConfig().api.uid, this.config.getConfig().api.secret);
     }
 
-    async getCoalitions(): Promise<Response> {
+    async getCoalitions(): Promise<Coaltion[]> {
         try {
-            await this.api.get('/v2/coalitions').then((res: any) => {
+            await this.api.get('/v2/coalitions', { }).then((res: any) => {
                 return res.data;
             });
 
@@ -34,9 +34,8 @@ export class Api {
 
     async getUserCoalition(id: string): Promise<Coaltion[]> {
         try {
-            const response = await this.api.get(`/v2/users/${id}/coalitions`);
+            const response = await this.api.get(`/v2/users/${id}/coalitions`, {});
             const data = response.json as Coaltion[];
-    
             return data;
             
         } catch (error) {
