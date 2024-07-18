@@ -30,6 +30,7 @@ class CommandLoader {
       const files = readdirSync(this.slashCommandsDir);
       for (const file of files) {
         if (!file.endsWith('.ts')) continue;
+
         const CommandClass = require(`${this.slashCommandsDir}/${file}`).default;
         if (!CommandClass) {
           throw new Error(`Module ${file} does not have a default export.`);

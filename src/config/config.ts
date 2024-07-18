@@ -28,7 +28,7 @@ export default class ConfigManager {
             port: 3306,
         },
         api: {
-            url: "http://localhost:3000",
+            url: "http://api.intra.42.fr",
             uid: "YOUR_API_UID",
             secret: "YOUR_API_SECRET",
             callbackUrl: "http://localhost:3000/callback"

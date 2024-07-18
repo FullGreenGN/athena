@@ -10,14 +10,19 @@
     "dev": "nodemon"
   },
   "dependencies": {
+    "42-connector": "https://github.com/codam-coding-college/42-connector.git",
+    "@codam/fast42": "^2.1.6",
     "@discord-player/extractor": "^4.4.7",
     "@discordjs/voice": "^0.17.0",
     "discord-player": "^6.6.10",
     "discord.js": "^14.15.3",
+    "form-data": "^4.0.0",
+    "isomorphic-fetch": "^3.0.0",
     "mediaplex": "^0.0.9",
     "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
+    "@types/isomorphic-fetch": "^0.0.39",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
